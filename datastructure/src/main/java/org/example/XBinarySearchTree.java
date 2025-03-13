@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,12 +30,7 @@ public class XBinarySearchTree<T extends Comparable<T>> implements XBinaryTree<T
     @Override
     public void insert(T value) {
         if (value==null){
-            throw new NullPointerException();
-        }
-        if (root==null){
-            root = new Node<>(value);
-            size++;
-            return;
+            throw new NullPointerException("Value cannot be null");
         }
         root = insertRec(root,value);
 //        Node<T> current = root;
@@ -78,10 +74,7 @@ public class XBinarySearchTree<T extends Comparable<T>> implements XBinaryTree<T
     @Override
     public boolean search(T value) {
         if (value==null){
-            throw new NullPointerException();
-        }
-        if (root==null){
-            throw new NoSuchElementException();
+            throw new NullPointerException("Value cannot be null");
         }
         return searchRec(root,value);
 //        Node<T> current = root;
@@ -105,7 +98,7 @@ public class XBinarySearchTree<T extends Comparable<T>> implements XBinaryTree<T
         int cmp = value.compareTo(node.value);
         if(cmp<0){
             return searchRec(node.left,value);
-        }else if(cmp<0){
+        }else if(cmp>0){
             return searchRec(node.right,value);
         }else {
             return true;
@@ -114,26 +107,83 @@ public class XBinarySearchTree<T extends Comparable<T>> implements XBinaryTree<T
 
     @Override
     public void delete(T value) {
-        if (root == null){
-            throw new NoSuchElementException();
-        }
         if (value == null){
-            throw new NullPointerException();
+            throw new NullPointerException("Value cannot be null");
         }
+        root = deleteRec(root, value);
     }
+
+    private Node<T> deleteRec(Node<T> node,T value){
+        if (node==null){
+            return null;
+        }
+        int cmp = value.compareTo(node.value);
+        if(cmp<0){
+            node.left = deleteRec(node.left, value);
+        }else if(cmp>0){
+            node.right = deleteRec(node.right,value);
+        }else {
+            if (node.right ==null && node.left==null){
+                size--;
+                return null;
+            }
+            if (node.left==null){
+                size--;
+                return node.right;
+            }
+            if (node.right==null){
+                size--;
+                return node.left;
+            }
+            Node<T> successor = findMin(node.right);
+            node.value = successor.value;
+            node.right = deleteRec(node.right,successor.value);
+        }
+        return node;
+    }
+
+    private Node<T> findMin(Node<T> node){
+        while (node.left!=null){
+            node= node.left;
+        }
+        return node;
+    }
+
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public int height() {
-        return 0;
+        return heightRec(root);
     }
+
+    private int heightRec(Node<T> node){
+        if (node==null) {
+            return -1;
+        }
+        int leftHeight = heightRec(node.left);
+        int rightHeight = heightRec(node.right);
+
+        return Math.max(leftHeight,rightHeight) + 1;
+    }
+
 
     @Override
     public List<T> inorderTraversal() {
-        return List.of();
+        List<T> lst = new ArrayList<>();
+        inorder(root,lst);
+        return lst;
     }
+    private void inorder(Node<T> node, List<T> lst){
+        if (node==null){
+            return ;
+        }
+        inorder(node.left,lst);
+        lst.add(node.value);
+        inorder(node.right,lst);
+    }
+
 }

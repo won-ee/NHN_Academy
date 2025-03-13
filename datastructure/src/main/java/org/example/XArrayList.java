@@ -100,6 +100,7 @@ public class XArrayList<T> implements XList<T> {
         if (element == null){
             throw new NullPointerException();
         }
+
         for (int i=0; i<size; i++){
             if (array[i]==element){
                 remove(i);
@@ -111,19 +112,16 @@ public class XArrayList<T> implements XList<T> {
 
     @Override
     public boolean contains(T element) {
-        if (element == null){
-            throw new NullPointerException();
-        }
-        for (int i=0; i<size; i++){
-            if (array[i] ==element){
-                return true;
-            }
-        }
-        return false;
+
+        return indexOf(element) > -1;
     }
 
     @Override
     public int indexOf(T element) {
+
+        if (element == null){
+        throw new NullPointerException();
+        }
         for (int i=0; i<size; i++){
             if (array[i]==element){
                 return i;

@@ -2,20 +2,29 @@ package org.example;
 
 public class Main {
     public static void main(String[] args) {
-        XQueue<Integer> queue = new XArrayQueue<>(3);  // 초기 크기 3
+        XMap<String, Integer> map = new XHashMap<>();
 
-        queue.enqueue(10);
-        queue.enqueue(20);
-        queue.enqueue(30);
+// 요소 추가
+        map.put("Alice", 25);
+        map.put("Bob", 30);
+        map.put("Charlie", 35);
+        System.out.println(map.get("Alice")); // 출력: 25
 
-        System.out.println(queue.dequeue());  // 출력: 10
-        queue.enqueue(40);
+// 키 존재 여부 확인
+        System.out.println(map.containsKey("Bob")); // 출력: true
+        System.out.println(map.containsValue(40)); // 출력: false
 
-        System.out.println(queue.peek());  // 출력: 20
-        System.out.println(queue.size());  // 출력: 3
+// 요소 삭제
+        map.remove("Charlie");
+        System.out.println(map.containsKey("Charlie")); // 출력: false
 
-        queue.enqueue(50);  // 크기 자동 확장 발생 (크기: 6)
-        System.out.println(queue.size());  // 출력: 4
+// 모든 키와 값 출력
+        System.out.println("Keys: " + map.keySet()); // 출력: [Alice, Bob]
+        System.out.println("Values: " + map.values()); // 출력: [25, 30]
+
+// 전체 삭제 후 확인
+        map.clear();
+        System.out.println(map.isEmpty()); // 출력: true
 
     }
 }
